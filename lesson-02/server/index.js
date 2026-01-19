@@ -1,7 +1,8 @@
 import express from 'express';
 const app = express();
 import { customers, orders, products } from './data.js';
-
+import { v4 as uuidv4 } from 'uuid';
+app.use(express.json());
 app.listen(8080, () => {
     console.log('Server is running!');
 });
@@ -46,3 +47,46 @@ app.get('/products', (req, res) => {
     const productData = products.filter(product => (product.price <= maxPrice && product.price >= minPrice))
     return res.status(200).send({ message: "Get product success!", data: productData })
 });
+
+//6.Thêm mới khách hàng
+app.post('/customers', (req, res) => {
+    const { name, email, age } = req.body;
+    //validate email
+    if (!email) return res.status(404).send({ message: 'Email is empty!' })
+    const isExistEmail = customers.some(cus => cus.email === email);
+
+    if (isExistEmail) {
+        return res.status(404).send({ message: 'Email was used for another account!' })
+    }
+
+    const id = uuidv4();
+    const newUser = { id, name, age, email }
+    customers.push(newUser)
+    return res.status(201).send({ message: 'Create user successfully', status: 200, data: newUser })
+})
+
+//7. Tạo mới đơn hàng
+app.post('/orders', (req, res) => {
+    const { orderId, customerId, productId, quantity } = req.body;
+    //validate quality of product is can't provide for order
+    const product = products.find(product => product.id === productId);
+    const qualityProduct = product?.quantity;
+    if (quantity > qualityProduct) {
+        return res.status(500).send({ message: 'The product is not enough for this order', data: null, status: 500 })
+    }
+
+    //Caculate totalPrice of this order
+    const totalPrice = product.price * quantity;
+
+    const newOrder = {
+        id:orderId,
+        customerId: customerId,
+        productId: productId,
+        quantity: quantity,
+        totalPrice: totalPrice
+    }
+
+    orders.push(newOrder);
+
+    return res.status(201).send({message:"Create a new order successfully", status:201})
+})
