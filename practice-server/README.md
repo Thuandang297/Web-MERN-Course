@@ -19,6 +19,7 @@ app.listen(8080, () => {
 7.Setting script trong package.json để chạy json-server và node:
 "dev":"concurrently \"nodemon index.js\" \"json-server --watch db.json\""
 
+8.Cài axios: npm i axios
 
 
 
