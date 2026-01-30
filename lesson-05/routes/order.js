@@ -5,4 +5,5 @@ const router = Router();
 
 router.post('/', orderController.create)
 
+router.get('/highvalue',orderController.getHighestOrder)
 export default router;

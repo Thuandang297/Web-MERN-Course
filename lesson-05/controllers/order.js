@@ -4,9 +4,16 @@ const orderController = {
     getOrdersByCusId: async (req, res) => {
         try {
             const cusId = req.params.customerId
-            console.log("🚀 ~ cusId:", cusId)
             const response = await orderModel.find({ customerId: cusId });
             res.status(200).send({ message: "Oke", data: response })
+        } catch (error) {
+
+        }
+    },
+    getHighestOrder: async (req, res) => {
+        try {
+            const response = await orderModel.find({ totalPrice: { $gte: 10000000 } })
+            res.status(200).send({ message: 'Get highest order success!', data: response, success: true })
         } catch (error) {
 
         }
