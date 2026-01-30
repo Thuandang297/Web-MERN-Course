@@ -6,7 +6,10 @@ const router = express.Router();
 
 router.get('/', customerController.getAll)
 router.get('/:id', customerController.getOne)
+
+//Thêm mới người dùng
 router.post('/', customerController.create);
+
 router.put('/:id', customerController.update)
 router.delete('/:id', customerController.delete)
 

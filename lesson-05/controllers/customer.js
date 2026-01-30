@@ -1,9 +1,9 @@
 import CustomerModel from '../models/customers.js'
+
 const customerController = {
     create: async (req, res) => {
         try {
             const { name, email, age } = req.body
-            console.log("🚀 ~ req.body:", req.body)
             const createdCustomer = await CustomerModel.create({ name, email, age });
             return res.status(201).send({ message: "Create customer successfully!", data: createdCustomer, success: true })
         } catch (error) {

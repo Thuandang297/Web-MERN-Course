@@ -3,7 +3,10 @@ import productModal from "../models/product.js";
 const productController = {
     getProductByPriceRange: async (req, res) => {
         try {
+            //Laay dieu kien tim kiem
             const { minPrice, maxPrice } = req.query
+
+            //Logic tim kiem
             if (!minPrice || !maxPrice) {
                 const response = await productModal.find({})
                 res.status(200).send({ message: "success", data: response, success: true })
