@@ -4,9 +4,23 @@ import mongoose from "mongoose"
 import bcrypt from 'bcrypt'
 import AccountModel from "./src/models/accounts.js"
 import jwt  from "jsonwebtoken"
+import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
 
 const app = express()
 app.use(express.json())
+
+// Khởi tạo tùy chọn lưu trữ memoryStorage
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+
+cloudinary.config({
+    cloud_name: 'dxo324ch0',
+    api_key: '392236692491454',
+    api_secret: 'qYDv0H5lDyR81eueVbGoSsKGOHQ'
+});
+
 
 mongoose.connect('mongodb+srv://trello-database:Thuan%40627@trello-cluster.cdzlw.mongodb.net/?appName=trello-cluster')
 
@@ -85,6 +99,18 @@ app.post('/login', async (req, res) => {
 
 })
 
+//Practice upload file
+app.post('/upload', upload.single('file'), (req, res) => {
+  // Truy cập dữ liệu tệp từ req.file
+  const file = req.file;
+
+  if (!file) {
+    return res.status(400).json({ error: 'Không có tệp được tải lên.' });
+  }
+
+  // Trả về phản hồi với thông tin về tệp đã tải lên
+  res.json({ message: 'Tệp được tải lên thành công.', data: file });
+});
 
 app.listen(8080, () => {
     console.log("App is running")

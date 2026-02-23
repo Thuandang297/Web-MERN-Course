@@ -6,3 +6,7 @@
 +response: dữ liệu server trả về cho người dùng
 
 -Router: Bộ định tuyến
+
+Lesson-10
+-Cài đặt multer:
+B1: npm i multer
