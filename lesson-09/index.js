@@ -1,11 +1,11 @@
-import express from "express"
-import AuthorModel from "./src/models/author.js"
-import mongoose from "mongoose"
 import bcrypt from 'bcrypt'
+import { v2 as cloudinary } from 'cloudinary'
+import express from "express"
+import jwt from "jsonwebtoken"
+import mongoose from "mongoose"
+import multer from 'multer'
 import AccountModel from "./src/models/accounts.js"
-import jwt  from "jsonwebtoken"
-import multer from 'multer';
-import { v2 as cloudinary } from 'cloudinary';
+import AuthorModel from "./src/models/author.js"
 
 const app = express()
 app.use(express.json())
@@ -16,9 +16,9 @@ const upload = multer({ storage: storage });
 
 
 cloudinary.config({
-    cloud_name: 'dxo324ch0',
-    api_key: '392236692491454',
-    api_secret: 'qYDv0H5lDyR81eueVbGoSsKGOHQ'
+    cloud_name: 'thuandang',
+    api_key: '923999412237653',
+    api_secret: 'o8_ZJQh4Ui3mjINLTStyREPGUxc'
 });
 
 
@@ -110,6 +110,40 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
   // Trả về phản hồi với thông tin về tệp đã tải lên
   res.json({ message: 'Tệp được tải lên thành công.', data: file });
+});
+//Upload with cloudinary
+
+
+cloudinary.config({
+    cloud_name: 'thuandang',
+    api_key: '923999412237653',
+    api_secret: 'o8_ZJQh4Ui3mjINLTStyREPGUxc'
+});
+
+
+app.post('/api/v1/upload', upload.single('file'), (req, res) => {
+    const file = req.file;
+
+    if (!file) {
+        return res.status(400).json({ error: 'Không có tệp được tải lên.' });
+    }
+    const dataUrl = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+    console.log("🚀 ~ dataUrl:", dataUrl)
+    const fileName = file.originalname.split('.')[0];
+    console.log("🚀 ~ fileName:", fileName)
+
+    cloudinary.uploader.upload(dataUrl, {
+        public_id: fileName,
+        resource_type: 'auto',
+        // có thể thêm field folder nếu như muốn tổ chức
+    }, (err, result) => {
+        console.log("🚀 ~ result:", result)
+        if (result) {
+            console.log('url',result.secure_url);
+            // lấy secure_url từ đây để lưu vào database.
+        }
+    });
+    res.json({ message: 'Tệp được tải lên thành công.', data: file });
 });
 
 app.listen(8080, () => {
