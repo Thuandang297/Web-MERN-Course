@@ -6,6 +6,14 @@ import mongoose from "mongoose"
 import multer from 'multer'
 import AccountModel from "./src/models/accounts.js"
 import AuthorModel from "./src/models/author.js"
+import CustomerModel from "./src/models/customers.js"
+import EmployeeModel from "./src/models/employees.js"
+import ManagerModel from "./src/models/managers.js"
+import PropertiesModel from "./src/models/properties.js"
+import DepositModel from "./src/models/depositOder.js"
+import userRouter from "./src/router/userRouter.js"
+import propertyRouter from "./src/router/propertyRouter.js"
+import depositOrderRouter from "./src/router/depositOrderRouter.js"
 
 const app = express()
 app.use(express.json())
@@ -145,6 +153,14 @@ app.post('/api/v1/upload', upload.single('file'), (req, res) => {
     });
     res.json({ message: 'Tệp được tải lên thành công.', data: file });
 });
+
+
+//Lesson-11: Pagination
+
+// API Routers
+app.use('/api/users', userRouter);
+app.use('/api/properties', propertyRouter);
+app.use('/api/deposit-orders', depositOrderRouter);
 
 app.listen(8080, () => {
     console.log("App is running")

@@ -8,6 +8,7 @@ const propertiesSchema = new mongoose.Schema({
         type:String,
         enum:["SOLD", "ONSALE","DISCONTINUED"]
     },
+    imageUrl: String,
     employeeId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Employees"
